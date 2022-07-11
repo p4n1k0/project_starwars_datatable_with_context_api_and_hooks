@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import TableContext from '../context/TableContext';
 
 export default function Table() {
-  const { results } = useContext(TableContext);
+  const { data } = useContext(TableContext);
 
   return (
     <div>
@@ -25,7 +25,7 @@ export default function Table() {
           </tr>
         </thead>
         <tbody>
-          { results.map((planet, index) => (
+          { data.map((planet, index) => (
             <tr key={ index }>
               <td>{planet.name}</td>
               <td>{planet.rotation_period}</td>
@@ -36,9 +36,7 @@ export default function Table() {
               <td>{planet.terrain}</td>
               <td>{planet.surface_water}</td>
               <td>{planet.population}</td>
-              <td>
-                {planet.films.map((film, iFilm) => (<p key={ iFilm }>{film}</p>))}
-              </td>
+              <td>{planet.films}</td>
               <td>{planet.created}</td>
               <td>{planet.edited}</td>
               <td>{planet.url}</td>
@@ -46,7 +44,6 @@ export default function Table() {
           ))}
         </tbody>
       </table>
-
     </div>
   );
 }

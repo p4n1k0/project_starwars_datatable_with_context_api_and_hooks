@@ -2,28 +2,22 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import TableContext from './TableContext';
 
-function TableProvider({ children }) {
-  const [results, setData] = useState([]);
+export default function TableProvider({ children }) {
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     const getData = async () => {
-      try {
-        const endpoint = await fetch('https://swapi-trybe.herokuapp.com/api/planets/');
-        const { data } = await endpoint.json();
-        const planets = data.map((planet) => {
-          delete planet.residents;
-          return planet;
-        });
-        setData(planets);
-      } catch (error) {
-        console.log(error);
-      }
+      const endpoint = await fetch('https://swapi-trybe.herokuapp.com/api/planets/');
+      const { results } = await endpoint.json();
+      const planets = results.filter((planet) => planet !== 'residents');
+
+      setData(planets);
     };
     getData();
   }, []);
 
   const typeContext = {
-    results,
+    data,
     setData,
   };
 
@@ -37,5 +31,3 @@ function TableProvider({ children }) {
 TableProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
-
-export default TableProvider;
