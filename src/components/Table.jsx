@@ -1,14 +1,12 @@
 import React, { useContext } from 'react';
 import TableContext from '../context/TableContext';
 
-const columnFilter = ['population', 'orbital_period',
-  'diameter', 'rotation_period', 'surface_water'];
-
 export default function Table() {
   const { filterByName: { name }, handleFilterName,
     filterData, filterColumn, handleFilterColumn,
     filterComparison, handleFilterComparison, filterQuantity,
-    handleFilterQuantity, filterSubmit } = useContext(TableContext);
+    handleFilterQuantity, filterSubmit, selectColumn,
+    filterByNumberValues, deleteFilter, deleteAllFilters } = useContext(TableContext);
 
   return (
     <div>
@@ -23,24 +21,30 @@ export default function Table() {
           onChange={ handleFilterName }
         />
       </label>
-      <select
-        data-testid="column-filter"
-        value={ filterColumn }
-        onChange={ handleFilterColumn }
-      >
-        {columnFilter.map((filter, index) => (
-          <option key={ index }>{filter}</option>
-        ))}
-      </select>
-      <select
-        data-testid="comparison-filter"
-        value={ filterComparison }
-        onChange={ handleFilterComparison }
-      >
-        <option value="maior que">maior que</option>
-        <option value="menor que">menor que</option>
-        <option value="igual a">igual a</option>
-      </select>
+      <label htmlFor="column-filter">
+        Column:
+        <select
+          data-testid="column-filter"
+          value={ filterColumn }
+          onChange={ handleFilterColumn }
+        >
+          {selectColumn.map((filter, index) => (
+            <option key={ index }>{filter}</option>
+          ))}
+        </select>
+      </label>
+      <label htmlFor="comparison-filter">
+        Operator:
+        <select
+          data-testid="comparison-filter"
+          value={ filterComparison }
+          onChange={ handleFilterComparison }
+        >
+          <option value="maior que">maior que</option>
+          <option value="menor que">menor que</option>
+          <option value="igual a">igual a</option>
+        </select>
+      </label>
       <label htmlFor="quantity">
         Quantity:
         <input
@@ -58,6 +62,29 @@ export default function Table() {
       >
         Filter:
       </button>
+      <button
+        type="button"
+        data-testid="button-remove-filters"
+        onClick={ deleteAllFilters }
+      >
+        Delete Filters
+      </button>
+      <ul>
+        Filters applied:
+        {
+          filterByNumberValues.map((filter, index) => (
+            <li key={ index } data-testid="filter">
+              {`${filter.column} - ${filter.comparison} - ${filter.value}`}
+              <button
+                type="button"
+                onClick={ () => deleteFilter(index) }
+              >
+                .
+              </button>
+            </li>
+          ))
+        }
+      </ul>
       <table>
         <thead>
           <tr>

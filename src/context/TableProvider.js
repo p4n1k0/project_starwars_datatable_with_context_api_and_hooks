@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import TableContext from './TableContext';
 
+const columnFilter = ['population', 'orbital_period',
+  'diameter', 'rotation_period', 'surface_water'];
+
 export default function TableProvider({ children }) {
   const [data, setData] = useState([]);
   const [filterByName, setFilterByName] = useState('');
@@ -50,6 +53,8 @@ export default function TableProvider({ children }) {
   const [filterQuantity, setFilterQuantity] = useState(0);
   const handleFilterQuantity = ({ target }) => { setFilterQuantity(target.value); };
 
+  const [selectColumn, setSelectColumn] = useState(columnFilter);
+
   const filterSubmit = () => {
     const newFilter = {
       column: filterColumn,
@@ -57,7 +62,33 @@ export default function TableProvider({ children }) {
       value: filterQuantity,
     };
     setFilterByNumberValues([...filterByNumberValues, newFilter]);
+
+    const newSelect = selectColumn.filter((select) => select !== filterColumn);
+    setSelectColumn(newSelect);
+    setFilterColumn(newSelect[0]);
   };
+
+  const deleteFilter = (index) => {
+    setFilterByNumberValues(
+      filterByNumberValues.filter((_filter, indexFilter) => indexFilter !== index),
+    );
+  };
+
+  const deleteAllFilters = () => {
+    setFilterByNumberValues([]);
+    setSelectColumn(columnFilter);
+  };
+
+  useEffect(() => {
+    const selectReturn = columnFilter.reduce((acc, select) => {
+      if (filterByNumberValues.some((e) => e.column === select)) {
+        return acc;
+      }
+      acc.push(select);
+      return acc;
+    }, []);
+    setSelectColumn(selectReturn);
+  }, [filterByNumberValues]);
 
   const contextValue = {
     data,
@@ -71,6 +102,10 @@ export default function TableProvider({ children }) {
     filterQuantity,
     handleFilterQuantity,
     filterSubmit,
+    selectColumn,
+    filterByNumberValues,
+    deleteFilter,
+    deleteAllFilters,
   };
 
   return (
