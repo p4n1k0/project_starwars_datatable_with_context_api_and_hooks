@@ -49,7 +49,7 @@
 <details>
   <summary><strong>:convenience_store: Desenvolvimento </strong></summary><br />
 
-  Neste projeto eu utilizei **Context API e Hooks** para desenvolver uma lista com filtros de planetas do universo de Star Wars.
+  Neste projeto utilizei **Context API e Hooks** para desenvolver uma lista com filtros de planetas do universo de Star Wars.
 
   O modelo do projeto pode ser acessado [neste link](https://trybe-starwars.surge.sh/).
 
