@@ -103,7 +103,7 @@ export default function Table() {
             <th>URL</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody data-testid="table-planets">
           {filterData.map((planet, index) => (
             <tr key={ index }>
               <td>{planet.name}</td>
