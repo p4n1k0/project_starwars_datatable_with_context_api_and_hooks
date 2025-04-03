@@ -78,6 +78,7 @@ export default function Table() {
               <button
                 type="button"
                 onClick={ () => deleteFilter(index) }
+                data-testid="filter-btn"
               >
                 .
               </button>

@@ -9,6 +9,15 @@ export default function TableProvider({ children }) {
   const [data, setData] = useState([]);
   const [filterByName, setFilterByName] = useState('');
   const handleFilterName = ({ target }) => setFilterByName(target.value);
+  const [filterData, setFilterData] = useState([...data]);
+  const [filterByNumberValues, setFilterByNumberValues] = useState([]);
+  const [filterColumn, setFilterColumn] = useState('population');
+  const handleFilterColumn = ({ target }) => { setFilterColumn(target.value); };
+  const [filterComparison, setFilterComparison] = useState('maior que');
+  const handleFilterComparison = ({ target }) => { setFilterComparison(target.value); };
+  const [filterQuantity, setFilterQuantity] = useState(0);
+  const handleFilterQuantity = ({ target }) => { setFilterQuantity(target.value); };
+  const [selectColumn, setSelectColumn] = useState(columnFilter);
 
   useEffect(() => {
     const getData = async () => {
@@ -20,9 +29,6 @@ export default function TableProvider({ children }) {
     };
     getData();
   }, []);
-
-  const [filterData, setFilterData] = useState([...data]);
-  const [filterByNumberValues, setFilterByNumberValues] = useState([]);
 
   useEffect(() => {
     const nameByFilter = data.filter((planet) => (
@@ -43,17 +49,6 @@ export default function TableProvider({ children }) {
     }), nameByFilter);
     setFilterData(newList);
   }, [data, filterByName, filterByNumberValues]);
-
-  const [filterColumn, setFilterColumn] = useState('population');
-  const handleFilterColumn = ({ target }) => { setFilterColumn(target.value); };
-
-  const [filterComparison, setFilterComparison] = useState('maior que');
-  const handleFilterComparison = ({ target }) => { setFilterComparison(target.value); };
-
-  const [filterQuantity, setFilterQuantity] = useState(0);
-  const handleFilterQuantity = ({ target }) => { setFilterQuantity(target.value); };
-
-  const [selectColumn, setSelectColumn] = useState(columnFilter);
 
   const filterSubmit = () => {
     const newFilter = {
