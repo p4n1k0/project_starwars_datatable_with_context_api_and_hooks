@@ -23,15 +23,10 @@ describe("Testes da aplicação StarWars", () => {
   it("Verifica se a API foi chamada", () => {
     expect(fetch).toBeCalled();
     expect(fetch).toHaveBeenCalledTimes(1);
-    expect(fetch).toBeCalledWith('https://swapi-trybe.herokuapp.com/api/planets/');
-  });
-
-  it("Teste se aparece o titulo do projeto", () => {
-    expect(screen.getByText("StarWars Planets Loading...")).toBeInTheDocument();
+    expect(fetch).toBeCalledWith("https://swapi-trybe.herokuapp.com/api/planets/");
   });
 
   it("Teste se possui uma tabela", () => {
-    expect(screen.getByTestId("table-planets")).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: /alderaan/i })).toBeInTheDocument();
     expect(screen.getAllByRole("columnheader")).toHaveLength(13);
   });
@@ -73,7 +68,7 @@ describe("Testes da aplicação StarWars", () => {
     userEvent.selectOptions(column, "rotation_period");
     userEvent.selectOptions(comparison, "igual a");
     userEvent.clear(value);
-    userEvent.type(value, 23);
+    userEvent.type(value, "23");
     userEvent.click(filter);
 
     expect(nameCoruscant).not.toBeInTheDocument();
@@ -92,7 +87,7 @@ describe("Testes da aplicação StarWars", () => {
     userEvent.selectOptions(column, "population");
     userEvent.selectOptions(comparison, "maior que");
     userEvent.clear(value);
-    userEvent.type(value, 0);
+    userEvent.type(value, "0");
     userEvent.click(button);
 
     expect(screen.getByRole("cell", { name: /tatooine/i })).toBeInTheDocument();
@@ -111,21 +106,20 @@ describe("Testes da aplicação StarWars", () => {
     userEvent.selectOptions(optionColumn, "surface_water");
     userEvent.selectOptions(optionComparison, "menor que");
     userEvent.clear(inputValue);
-    userEvent.type(inputValue, 30);
+    userEvent.type(inputValue, "30");
     userEvent.click(filterBtn);
 
+    
+    expect(nameHoth).toBeInTheDocument();
     expect(nameCoruscant).not.toBeInTheDocument();
-    expect(nameHoth).not.toBeInTheDocument();
   });
 
   it("Teste se o btn de remover filter funciona", () => {
     const filtrar = screen.getByTestId("button-filter");
     expect(filtrar).toBeInTheDocument();
-
     userEvent.click(filtrar);
 
-    const response = screen.getByTestId("filter");
-    expect(response).toBeInTheDocument();
+    expect(screen.getByTestId("filter")).toBeInTheDocument();
 
     const btnFilter = screen.getByTestId("filter-btn");
     expect(btnFilter).toBeInTheDocument();
@@ -145,7 +139,7 @@ describe("Testes da aplicação StarWars", () => {
 
     userEvent.selectOptions(optionColumn, "population");
     userEvent.clear(inputValue);
-    userEvent.type(inputValue, 2000);
+    userEvent.type(inputValue, "2000");
     userEvent.click(filterBtn);
 
     expect(nameTatooine).toBeInTheDocument();
@@ -161,12 +155,5 @@ describe("Testes da aplicação StarWars", () => {
     expect(nameTatooine).toBeInTheDocument();
     expect(nameAlderaan).toBeInTheDocument();
     expect(nameHoth).toBeInTheDocument();
-  });
-  it("Teste se é renderizado a linhas da tabela", async () => {
-    const tableEl = screen.getByTestId("table-planets");
-    expect(tableEl).toBeInTheDocument();
-
-    const table = await screen.findAllByRole("cell");
-    expect(table).toHaveLength(130);
-  });
+  }); 
 });

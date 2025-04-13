@@ -21,7 +21,7 @@ export default function Table() {
           onChange={ handleFilterName }
         />
       </label>
-      <label htmlFor="column-filter">
+      <label htmlFor="columnFilter">
         Column:
         <select
           data-testid="column-filter"
@@ -80,7 +80,7 @@ export default function Table() {
                 onClick={ () => deleteFilter(index) }
                 data-testid="filter-btn"
               >
-                .
+                X
               </button>
             </li>
           ))
@@ -104,10 +104,10 @@ export default function Table() {
             <th>URL</th>
           </tr>
         </thead>
-        <tbody data-testid="table-planets">
+        <tbody>
           {filterData.map((planet, index) => (
             <tr key={ index }>
-              <td>{planet.name}</td>
+              <td data-testid="planet-name">{planet.name}</td>
               <td>{planet.rotation_period}</td>
               <td>{planet.orbital_period}</td>
               <td>{planet.diameter}</td>

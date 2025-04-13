@@ -41,10 +41,8 @@ export default function TableProvider({ children }) {
         return Number(planet[index.column]) > Number(index.value);
       case 'menor que':
         return Number(planet[index.column]) < Number(index.value);
-      case 'igual a':
-        return Number(planet[index.column]) === Number(index.value);
       default:
-        return planet;
+        return Number(planet[index.column]) === Number(index.value);
       }
     }), nameByFilter);
     setFilterData(newList);
