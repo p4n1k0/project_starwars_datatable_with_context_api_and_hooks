@@ -9,6 +9,20 @@ export default function TableProvider({ children }) {
   const [data, setData] = useState([]);
   const [filterByName, setFilterByName] = useState('');
   const handleFilterName = ({ target }) => setFilterByName(target.value);
+  const [filterData, setFilterData] = useState([...data]);
+  const [filterByNumberValues, setFilterByNumberValues] = useState([]);
+  const [filterColumn, setFilterColumn] = useState('population');
+  const handleFilterColumn = ({ target }) => { setFilterColumn(target.value); };
+  const [filterComparison, setFilterComparison] = useState('maior que');
+  const handleFilterComparison = ({ target }) => { setFilterComparison(target.value); };
+  const [filterQuantity, setFilterQuantity] = useState(0);
+  const handleFilterQuantity = ({ target }) => { setFilterQuantity(target.value); };
+  const [selectColumn, setSelectColumn] = useState(columnFilter);
+  const [order, setOrder] = useState({ column: 'name', sort: 'ASC' });
+  const [isAscendent, setIsAscendent] = useState(false);
+  const [isDescendent, setIsDescendent] = useState(false);
+  const [columnToSort, setColumnToSort] = useState('population');
+  const [orderToSort, setOrderToSort] = useState('ASC');
 
   useEffect(() => {
     const getData = async () => {
@@ -21,9 +35,6 @@ export default function TableProvider({ children }) {
     getData();
   }, []);
 
-  const [filterData, setFilterData] = useState([...data]);
-  const [filterByNumberValues, setFilterByNumberValues] = useState([]);
-
   useEffect(() => {
     const nameByFilter = data.filter((planet) => (
       planet.name.toLowerCase().includes(filterByName)
@@ -35,25 +46,12 @@ export default function TableProvider({ children }) {
         return Number(planet[index.column]) > Number(index.value);
       case 'menor que':
         return Number(planet[index.column]) < Number(index.value);
-      case 'igual a':
-        return Number(planet[index.column]) === Number(index.value);
       default:
-        return planet;
+        return Number(planet[index.column]) === Number(index.value);
       }
     }), nameByFilter);
     setFilterData(newList);
   }, [data, filterByName, filterByNumberValues]);
-
-  const [filterColumn, setFilterColumn] = useState('population');
-  const handleFilterColumn = ({ target }) => { setFilterColumn(target.value); };
-
-  const [filterComparison, setFilterComparison] = useState('maior que');
-  const handleFilterComparison = ({ target }) => { setFilterComparison(target.value); };
-
-  const [filterQuantity, setFilterQuantity] = useState(0);
-  const handleFilterQuantity = ({ target }) => { setFilterQuantity(target.value); };
-
-  const [selectColumn, setSelectColumn] = useState(columnFilter);
 
   const filterSubmit = () => {
     const newFilter = {
@@ -90,6 +88,19 @@ export default function TableProvider({ children }) {
     setSelectColumn(selectReturn);
   }, [filterByNumberValues]);
 
+  const handleRadioButtons = ({ target }) => {
+    if (target.name === 'radio-asc') {
+      setIsAscendent(true);
+      setIsDescendent(false);
+      setOrderToSort('ASC');
+    }
+    if (target.name === 'radio-desc') {
+      setIsAscendent(false);
+      setIsDescendent(true);
+      setOrderToSort('DESC');
+    }
+  };
+
   const contextValue = {
     data,
     filterByName,
@@ -106,6 +117,15 @@ export default function TableProvider({ children }) {
     filterByNumberValues,
     deleteFilter,
     deleteAllFilters,
+    setFilterData,
+    setOrder,
+    order,
+    setColumnToSort,
+    isAscendent,
+    isDescendent,
+    columnToSort,
+    orderToSort,
+    handleRadioButtons,
   };
 
   return (

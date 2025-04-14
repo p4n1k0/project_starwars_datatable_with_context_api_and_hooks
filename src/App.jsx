@@ -5,7 +5,7 @@ import TableProvider from './context/TableProvider';
 function App() {
   return (
     <TableProvider>
-      <h3>StarWars Planets Loading...</h3>
+      <h3>StarWars Planets</h3>
       <Table />
     </TableProvider>
   );

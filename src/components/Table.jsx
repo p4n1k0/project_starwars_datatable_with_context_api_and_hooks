@@ -1,17 +1,28 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import TableContext from '../context/TableContext';
 
 export default function Table() {
   const { filterByName: { name }, handleFilterName,
     filterData, filterColumn, handleFilterColumn,
-    filterComparison, handleFilterComparison, filterQuantity,
-    handleFilterQuantity, filterSubmit, selectColumn,
-    filterByNumberValues, deleteFilter, deleteAllFilters } = useContext(TableContext);
+    filterComparison, handleFilterComparison, filterQuantity, orderToSort,
+    handleFilterQuantity, filterSubmit, selectColumn, columnToSort,
+    filterByNumberValues, deleteFilter, deleteAllFilters, order, setOrder,
+    handleRadioButtons, setColumnToSort, isAscendent, isDescendent,
+  } = useContext(TableContext);
+
+  useEffect(() => { }, [filterData]);
+  const sortColumns = (data) => {
+    if (order.column === 'name') return data.sort((a, b) => a.name.localeCompare(b.name));
+    if (order.sort === 'ASC') {
+      return data.sort((a, b) => a[order.column] - b[order.column]);
+    }
+    data.sort((a, b) => a[order.column] - b[order.column]);
+    return data.sort((a, b) => b[order.column] - a[order.column]);
+  };
 
   return (
     <div>
       <label htmlFor="filterName">
-        Name:
         <input
           id="filterName"
           type="text"
@@ -21,20 +32,21 @@ export default function Table() {
           onChange={ handleFilterName }
         />
       </label>
-      <label htmlFor="column-filter">
-        Column:
+      <br />
+      <label htmlFor="columnFilter">
+        Coluna:
         <select
           data-testid="column-filter"
           value={ filterColumn }
           onChange={ handleFilterColumn }
         >
           {selectColumn.map((filter, index) => (
-            <option key={ index }>{filter}</option>
+            <option key={ index }>{ filter }</option>
           ))}
         </select>
       </label>
       <label htmlFor="comparison-filter">
-        Operator:
+        Operador:
         <select
           data-testid="comparison-filter"
           value={ filterComparison }
@@ -46,7 +58,7 @@ export default function Table() {
         </select>
       </label>
       <label htmlFor="quantity">
-        Quantity:
+        Quantidade:
         <input
           id="quantity"
           type="number"
@@ -60,15 +72,56 @@ export default function Table() {
         data-testid="button-filter"
         onClick={ filterSubmit }
       >
-        Filter:
+        Filtrar
       </button>
       <button
         type="button"
         data-testid="button-remove-filters"
         onClick={ deleteAllFilters }
       >
-        Delete Filters
+        Delete filtros
       </button>
+      <select
+        name="column-sort"
+        data-testid="column-sort"
+        onChange={ (event) => { setColumnToSort(event.target.value); } }
+      >
+        <option value="population">population</option>
+        <option value="orbital_period">orbital_period</option>
+        <option value="diameter">diameter</option>
+        <option value="rotation_period">rotation_period</option>
+        <option value="surface_water">surface_water</option>
+      </select>
+      <div>
+        <input
+          type="radio"
+          name="radio-asc"
+          id="radio-asc"
+          data-testid="column-sort-input-asc"
+          value="ASC"
+          checked={ isAscendent }
+          onChange={ handleRadioButtons }
+        />
+        Ascendente
+        <input
+          type="radio"
+          name="radio-desc"
+          id="radio-desc"
+          data-testid="column-sort-input-desc"
+          value="DESC"
+          checked={ isDescendent }
+          onChange={ handleRadioButtons }
+        />
+        Descendente
+      </div>
+      <button
+        type="button"
+        data-testid="column-sort-button"
+        onClick={ () => { setOrder({ column: columnToSort, sort: orderToSort }); } }
+      >
+        Ordenar
+      </button>
+      <br />
       <ul>
         Filters applied:
         {
@@ -78,8 +131,9 @@ export default function Table() {
               <button
                 type="button"
                 onClick={ () => deleteFilter(index) }
+                data-testid="filter-btn"
               >
-                .
+                X
               </button>
             </li>
           ))
@@ -104,9 +158,9 @@ export default function Table() {
           </tr>
         </thead>
         <tbody>
-          {filterData.map((planet, index) => (
+          {sortColumns(filterData).map((planet, index) => (
             <tr key={ index }>
-              <td>{planet.name}</td>
+              <td data-testid="planet-name">{planet.name}</td>
               <td>{planet.rotation_period}</td>
               <td>{planet.orbital_period}</td>
               <td>{planet.diameter}</td>
