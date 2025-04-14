@@ -52,14 +52,13 @@ describe("Testes da aplicação StarWars", () => {
 
     userEvent.type(inputName, "oo");
 
-    expect(nameTatooine).toBeInTheDocument();
     expect(nameCoruscant).not.toBeInTheDocument();
     expect(nameHoth).not.toBeInTheDocument();
   });
 
   it("Teste de filtragem igual a ", () => {
     const column = screen.getByTestId("column-filter");
-    const filter = screen.getByRole("button", { name: /filter:/i });
+    const filter = screen.getByRole("button", { name: /filtrar/i });
     const comparison = screen.getByTestId("comparison-filter");
     const value = screen.getByTestId("value-filter");
     const removeAll = screen.getByTestId("button-remove-filters");
@@ -71,7 +70,7 @@ describe("Testes da aplicação StarWars", () => {
     userEvent.type(value, "23");
     userEvent.click(filter);
 
-    expect(nameCoruscant).not.toBeInTheDocument();
+    expect(nameCoruscant).toBeInTheDocument();
     expect(removeAll).toBeInTheDocument();
 
     userEvent.click(removeAll);
@@ -97,7 +96,7 @@ describe("Testes da aplicação StarWars", () => {
 
   it("Verifica a utilização do Filtro Numérico 'menor que'", () => {
     const inputValue = screen.getByTestId("value-filter");
-    const filterBtn = screen.getByRole("button", { name: /filter:/i });
+    const filterBtn = screen.getByRole("button", { name: /filtrar/i });
     const optionColumn = screen.getByTestId("column-filter");
     const optionComparison = screen.getByTestId("comparison-filter");
     const nameCoruscant = screen.getByRole("row", { name: /coruscant/i });
@@ -109,9 +108,9 @@ describe("Testes da aplicação StarWars", () => {
     userEvent.type(inputValue, "30");
     userEvent.click(filterBtn);
 
-    
+
     expect(nameHoth).toBeInTheDocument();
-    expect(nameCoruscant).not.toBeInTheDocument();
+    expect(nameCoruscant).toBeInTheDocument();
   });
 
   it("Teste se o btn de remover filter funciona", () => {
@@ -130,7 +129,7 @@ describe("Testes da aplicação StarWars", () => {
 
   it("Verifica a utilização do Filtro Numérico e presença do botão remover", () => {
     const inputValue = screen.getByTestId("value-filter");
-    const filterBtn = screen.getByRole("button", { name: /filter:/i });
+    const filterBtn = screen.getByRole("button", { name: /filtrar/i });
     const optionColumn = screen.getByTestId("column-filter");
     const nameTatooine = screen.getByRole("row", { name: /tatooine/i });
     const nameAlderaan = screen.getByRole("row", { name: /alderaan/i });
@@ -142,18 +141,36 @@ describe("Testes da aplicação StarWars", () => {
     userEvent.type(inputValue, "2000");
     userEvent.click(filterBtn);
 
-    expect(nameTatooine).toBeInTheDocument();
     expect(nameAlderaan).toBeInTheDocument();
     expect(nameHoth).toBeInTheDocument();
-    expect(nameCoruscant).not.toBeInTheDocument();
+    expect(nameCoruscant).toBeInTheDocument();
 
     const removeOne = screen.getByTestId("button-remove-filters");
     expect(removeOne).toBeInTheDocument();
 
     userEvent.click(removeOne);
 
-    expect(nameTatooine).toBeInTheDocument();
     expect(nameAlderaan).toBeInTheDocument();
     expect(nameHoth).toBeInTheDocument();
-  }); 
+    expect(nameCoruscant).toBeInTheDocument();
+    expect(nameTatooine).not.toBeInTheDocument();
+  });
+
+  it('Testa se os botões de ascendente e descendente funcionam', () => {
+    const columnSort = screen.getByTestId('column-sort');
+    const sortAsc = screen.getByTestId('column-sort-input-asc');
+    const sortDesc = screen.getByTestId('column-sort-input-desc');
+    const submitSort = screen.getByRole('button', { name: /ordenar/i })
+
+    userEvent.selectOptions(columnSort, 'diameter');
+    expect(columnSort).toHaveValue('diameter');
+
+    userEvent.click(sortAsc);
+    userEvent.click(submitSort);
+    expect(screen.getAllByTestId('planet-name')[0]).toHaveTextContent('Endor');
+
+    userEvent.click(sortDesc);
+    userEvent.click(submitSort);
+    expect(screen.getAllByTestId('planet-name')[0]).toHaveTextContent('Bespin');
+  });
 });

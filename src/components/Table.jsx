@@ -16,14 +16,13 @@ export default function Table() {
     if (order.sort === 'ASC') {
       return data.sort((a, b) => a[order.column] - b[order.column]);
     }
-    if (order.sort === 'DESC') data.sort((a, b) => a[order.column] - b[order.column]);
+    data.sort((a, b) => a[order.column] - b[order.column]);
     return data.sort((a, b) => b[order.column] - a[order.column]);
   };
 
   return (
     <div>
       <label htmlFor="filterName">
-        Name:
         <input
           id="filterName"
           type="text"
@@ -33,8 +32,9 @@ export default function Table() {
           onChange={ handleFilterName }
         />
       </label>
+      <br />
       <label htmlFor="columnFilter">
-        Column:
+        Coluna:
         <select
           data-testid="column-filter"
           value={ filterColumn }
@@ -46,7 +46,7 @@ export default function Table() {
         </select>
       </label>
       <label htmlFor="comparison-filter">
-        Operator:
+        Operador:
         <select
           data-testid="comparison-filter"
           value={ filterComparison }
@@ -58,7 +58,7 @@ export default function Table() {
         </select>
       </label>
       <label htmlFor="quantity">
-        Quantity:
+        Quantidade:
         <input
           id="quantity"
           type="number"
@@ -72,21 +72,19 @@ export default function Table() {
         data-testid="button-filter"
         onClick={ filterSubmit }
       >
-        Filter:
+        Filtrar
       </button>
       <button
         type="button"
         data-testid="button-remove-filters"
         onClick={ deleteAllFilters }
       >
-        Delete Filters
+        Delete filtros
       </button>
       <select
         name="column-sort"
         data-testid="column-sort"
-        onChange={ (event) => {
-          setColumnToSort(event.target.value);
-        } }
+        onChange={ (event) => { setColumnToSort(event.target.value); } }
       >
         <option value="population">population</option>
         <option value="orbital_period">orbital_period</option>
@@ -119,12 +117,11 @@ export default function Table() {
       <button
         type="button"
         data-testid="column-sort-button"
-        onClick={ () => {
-          setOrder({ column: columnToSort, sort: orderToSort });
-        } }
+        onClick={ () => { setOrder({ column: columnToSort, sort: orderToSort }); } }
       >
         Ordenar
       </button>
+      <br />
       <ul>
         Filters applied:
         {
@@ -161,7 +158,7 @@ export default function Table() {
           </tr>
         </thead>
         <tbody>
-          {filterData && sortColumns(filterData).map((planet, index) => (
+          {sortColumns(filterData).map((planet, index) => (
             <tr key={ index }>
               <td data-testid="planet-name">{planet.name}</td>
               <td>{planet.rotation_period}</td>
