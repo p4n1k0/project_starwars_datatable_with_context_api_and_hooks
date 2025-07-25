@@ -7,12 +7,17 @@ const columnFilter = ['population', 'orbital_period',
 
 export default function TableProvider({ children }) {
   const [data, setData] = useState([]);
-  const [filterByName, setFilterByName] = useState('');
-  const handleFilterName = ({ target }) => setFilterByName(target.value);
-  const [filterData, setFilterData] = useState([...data]);
+  const [filterData, setFilterData] = useState([]);
+
+  const [filterByName, setFilterByName] = useState({ name: '' });
+  const handleFilterName = ({ target }) => {
+    setFilterByName({ name: target.value });
+  };
+
   const [filterByNumberValues, setFilterByNumberValues] = useState([]);
   const [filterColumn, setFilterColumn] = useState('population');
   const handleFilterColumn = ({ target }) => { setFilterColumn(target.value); };
+
   const [filterComparison, setFilterComparison] = useState('maior que');
   const handleFilterComparison = ({ target }) => { setFilterComparison(target.value); };
   const [filterQuantity, setFilterQuantity] = useState(0);
@@ -26,7 +31,7 @@ export default function TableProvider({ children }) {
 
   useEffect(() => {
     const getData = async () => {
-      const endpoint = await fetch('https://swapi-trybe.herokuapp.com/api/planets/');
+      const endpoint = await fetch('https://swapi.bry.com.br/api/planets/');
       const { results } = await endpoint.json();
       const planets = results.filter((planet) => planet !== 'residents');
 
@@ -36,9 +41,8 @@ export default function TableProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    const nameByFilter = data.filter((planet) => (
-      planet.name.toLowerCase().includes(filterByName)
-    ));
+    const filteredByName = data
+      .filter((planet) => planet.name.toLowerCase().includes(filterByName.name));
 
     const newList = filterByNumberValues.reduce((acc, index) => acc.filter((planet) => {
       switch (index.comparison) {
@@ -49,7 +53,7 @@ export default function TableProvider({ children }) {
       default:
         return Number(planet[index.column]) === Number(index.value);
       }
-    }), nameByFilter);
+    }), filteredByName);
     setFilterData(newList);
   }, [data, filterByName, filterByNumberValues]);
 
@@ -102,7 +106,6 @@ export default function TableProvider({ children }) {
   };
 
   const contextValue = {
-    data,
     filterByName,
     handleFilterName,
     filterData,

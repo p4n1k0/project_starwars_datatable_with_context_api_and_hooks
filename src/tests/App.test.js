@@ -23,7 +23,7 @@ describe("Testes da aplicação StarWars", () => {
   it("Verifica se a API foi chamada", () => {
     expect(fetch).toBeCalled();
     expect(fetch).toHaveBeenCalledTimes(1);
-    expect(fetch).toBeCalledWith("https://swapi-trybe.herokuapp.com/api/planets/");
+    expect(fetch).toBeCalledWith("https://swapi.bry.com.br/api/planets/");
   });
 
   it("Teste se possui uma tabela", () => {

@@ -1,16 +1,14 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import TableContext from '../context/TableContext';
 
 export default function Table() {
-  const { filterByName: { name }, handleFilterName,
-    filterData, filterColumn, handleFilterColumn,
+  const { handleFilterName, filterData, handleFilterColumn,
     filterComparison, handleFilterComparison, filterQuantity, orderToSort,
     handleFilterQuantity, filterSubmit, selectColumn, columnToSort,
     filterByNumberValues, deleteFilter, deleteAllFilters, order, setOrder,
     handleRadioButtons, setColumnToSort, isAscendent, isDescendent,
   } = useContext(TableContext);
 
-  useEffect(() => { }, [filterData]);
   const sortColumns = (data) => {
     if (order.column === 'name') return data.sort((a, b) => a.name.localeCompare(b.name));
     if (order.sort === 'ASC') {
@@ -21,23 +19,21 @@ export default function Table() {
   };
 
   return (
-    <div>
-      <label htmlFor="filterName">
+    <form>
+      <label htmlFor="filterByName">
         <input
-          id="filterName"
+          id="filterByName"
           type="text"
           name="filterByName"
           data-testid="name-filter"
-          value={ name }
+          placeholder="planet name"
           onChange={ handleFilterName }
         />
       </label>
-      <br />
       <label htmlFor="columnFilter">
         Coluna:
         <select
           data-testid="column-filter"
-          value={ filterColumn }
           onChange={ handleFilterColumn }
         >
           {selectColumn.map((filter, index) => (
@@ -79,7 +75,7 @@ export default function Table() {
         data-testid="button-remove-filters"
         onClick={ deleteAllFilters }
       >
-        Delete filtros
+        Remover filtros
       </button>
       <select
         name="column-sort"
@@ -123,7 +119,7 @@ export default function Table() {
       </button>
       <br />
       <ul>
-        Filters applied:
+        Filtros aplicados:
         {
           filterByNumberValues.map((filter, index) => (
             <li key={ index } data-testid="filter">
@@ -177,6 +173,6 @@ export default function Table() {
           ))}
         </tbody>
       </table>
-    </div>
+    </form>
   );
 }
